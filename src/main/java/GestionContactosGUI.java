@@ -9,7 +9,6 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class GestionContactosGUI extends JFrame {
-    // ... rest del código igual
 
     private ResourceBundle messages;
     private Locale currentLocale;
@@ -23,6 +22,7 @@ public class GestionContactosGUI extends JFrame {
     private DefaultTableModel tableModel;
 
     public GestionContactosGUI() {
+        // Idioma por defecto: Español
         currentLocale = Locale.forLanguageTag("es");
         loadBundle();
 
@@ -31,16 +31,17 @@ public class GestionContactosGUI extends JFrame {
     }
 
     private void loadBundle() {
-    try {
-        messages = ResourceBundle.getBundle("messages", currentLocale, Thread.currentThread().getContextClassLoader());
-    } catch (Exception e1) {
+        // Carga robusta compatible con ejecuciones desde IDEs y consola
         try {
-            messages = ResourceBundle.getBundle("messages", currentLocale);
-        } catch (Exception e2) {
-            messages = ResourceBundle.getBundle("main.resources.messages", currentLocale);
+            messages = ResourceBundle.getBundle("messages", currentLocale, Thread.currentThread().getContextClassLoader());
+        } catch (Exception e1) {
+            try {
+                messages = ResourceBundle.getBundle("messages", currentLocale);
+            } catch (Exception e2) {
+                messages = ResourceBundle.getBundle("main.resources.messages", currentLocale);
+            }
         }
     }
-}
 
     private void initUI() {
         setTitle("Gestión de Contactos");
@@ -83,7 +84,7 @@ public class GestionContactosGUI extends JFrame {
         JPanel centerPanel = new JPanel(new BorderLayout(10, 10));
         centerPanel.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
 
-        // Formulario
+        // Formulario de entrada
         JPanel formPanel = new JPanel(new GridBagLayout());
         formPanel.setBackground(Color.WHITE);
         formPanel.setBorder(BorderFactory.createCompoundBorder(
@@ -116,7 +117,7 @@ public class GestionContactosGUI extends JFrame {
         gbc.gridx = 0; gbc.gridy = 2; formPanel.add(lblEmail, gbc);
         gbc.gridx = 1; gbc.gridy = 2; formPanel.add(txtEmail, gbc);
 
-        // Botones
+        // Botones de acción
         JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 8, 5));
         btnPanel.setOpaque(false);
 
@@ -137,7 +138,7 @@ public class GestionContactosGUI extends JFrame {
 
         centerPanel.add(formPanel, BorderLayout.WEST);
 
-        // Tabla
+        // Tabla de contactos
         tableModel = new DefaultTableModel();
         table = new JTable(tableModel);
         table.setFont(new Font("Segoe UI", Font.PLAIN, 12));
@@ -156,15 +157,15 @@ public class GestionContactosGUI extends JFrame {
         btnClear.addActionListener(e -> clearFields());
     }
 
-   private void styleButton(JButton btn, Color bgColor) {
-    btn.setBackground(bgColor);
-    btn.setForeground(Color.WHITE); // Texto blanco visible
-    btn.setFont(new Font("Segoe UI", Font.BOLD, 12));
-    btn.setFocusPainted(false);
-    btn.setOpaque(true);
-    btn.setBorderPainted(false); // Quita el borde por defecto de Windows
-    btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-}
+    private void styleButton(JButton btn, Color bgColor) {
+        btn.setBackground(bgColor);
+        btn.setForeground(Color.WHITE);
+        btn.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        btn.setFocusPainted(false);
+        btn.setOpaque(true);
+        btn.setBorderPainted(false);
+        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+    }
 
     private void changeLanguage() {
         int index = cbLanguage.getSelectedIndex();
